@@ -7,7 +7,19 @@
     "longName": "RunForYourMoney",
     "projectType": "native",
     "resources": {
-        "media": []
+        "media": [
+            {
+                "file": "images/pebble_splash.png",
+                "name": "SPLASH",
+                "type": "png"
+            },
+            {
+                "file": "images/28_icon.png",
+                "menuIcon": true,
+                "name": "Tile",
+                "type": "png"
+            }
+        ]
     },
     "shortName": "RunForYourMoney",
     "uuid": "0ee8ca8a-7c4d-4d65-a8ed-5ca86aee332f",
