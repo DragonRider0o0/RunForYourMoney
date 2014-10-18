@@ -9,6 +9,16 @@
     "resources": {
         "media": [
             {
+                "file": "images/16_icon.png",
+                "name": "TINY",
+                "type": "png"
+            },
+            {
+                "file": "images/pebble_splash.png",
+                "name": "SPLASH",
+                "type": "png"
+            },
+            {
                 "file": "images/6.png",
                 "name": "RUN_6",
                 "type": "png-trans"
@@ -37,11 +47,6 @@
                 "file": "images/1.png",
                 "name": "RUN_1",
                 "type": "png-trans"
-            },
-            {
-                "file": "images/pebble_splash.png",
-                "name": "SPLASH",
-                "type": "png"
             },
             {
                 "file": "images/28_icon.png",
