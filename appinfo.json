@@ -9,6 +9,36 @@
     "resources": {
         "media": [
             {
+                "file": "images/6.png",
+                "name": "RUN_6",
+                "type": "png-trans"
+            },
+            {
+                "file": "images/5.png",
+                "name": "RUN_5",
+                "type": "png-trans"
+            },
+            {
+                "file": "images/4.png",
+                "name": "RUN_4",
+                "type": "png-trans"
+            },
+            {
+                "file": "images/3.png",
+                "name": "RUN_3",
+                "type": "png-trans"
+            },
+            {
+                "file": "images/2.png",
+                "name": "RUN_2",
+                "type": "png-trans"
+            },
+            {
+                "file": "images/1.png",
+                "name": "RUN_1",
+                "type": "png-trans"
+            },
+            {
                 "file": "images/pebble_splash.png",
                 "name": "SPLASH",
                 "type": "png"
@@ -21,7 +51,7 @@
             }
         ]
     },
-    "shortName": "RunForYourMoney",
+    "shortName": "Run4Your $",
     "uuid": "0ee8ca8a-7c4d-4d65-a8ed-5ca86aee332f",
     "versionCode": 1,
     "versionLabel": "1.0",
