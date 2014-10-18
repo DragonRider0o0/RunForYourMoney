@@ -1,15 +1,12 @@
 #include <pebble.h>
- 
+
+	//Universal Elements
 Window *window;
-//TextLayer *text_layer;
-
-
-BitmapLayer *splash_layer;
-
+static  GBitmap *tiny_bitmap;
 typedef enum {
     SPLASH = 0,
     HOME = 1,
-    CURRENT = 2,
+    ACTIVE = 2,
     NEW = 3,
 	   OLD = 4,
 	   SETTINGS = 5,
@@ -19,35 +16,97 @@ typedef enum {
 	   PAST_RACE = 9
 } screen;
 
+	
+	//Splash Elements
+	static GBitmap *splash_bitmap;
+	static BitmapLayer *splash_layer;
+	
+// Home Elements
+#define NUM_HOME_MENU_ITEMS  5
+#define	NUM_MENU_SECTIONS 1
+static SimpleMenuLayer* home_menu_layer;
+static SimpleMenuItem home_menu_items[NUM_HOME_MENU_ITEMS];
+static SimpleMenuSection menu_sections[NUM_MENU_SECTIONS];
+
+
+
+
+
 void splash_window(Window *window)
 	{
-	 GBitmap *tiny_bitmap;
+	
 	 tiny_bitmap = gbitmap_create_with_resource(RESOURCE_ID_TINY);
  	window_set_status_bar_icon	(window, tiny_bitmap);
 	
- 	GBitmap *splash_bitmap;
+ 	
 	 splash_bitmap= gbitmap_create_with_resource(RESOURCE_ID_SPLASH);
+	 
 	 splash_layer = bitmap_layer_create(GRect(0, 0, 144, 168));
   bitmap_layer_set_bitmap(splash_layer, splash_bitmap);
   layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(splash_layer));
 }
 
+void home_menu_select_callback(int index, void *ctx) 
+{
+  home_menu_items[index].subtitle = "You've hit select here!";
+  layer_mark_dirty(simple_menu_layer_get_layer(home_menu_layer));
+}
+
 void home_window(Window *window)
 {
-	 GBitmap *tiny_bitmap;
 	 tiny_bitmap = gbitmap_create_with_resource(RESOURCE_ID_TINY);
  	window_set_status_bar_icon	(window, tiny_bitmap);
-
-	 MenuLayer* mainMenu;
 	
+	int num_a_items = 0;
+  home_menu_items[num_a_items++] = (SimpleMenuItem)
+		{
+    .title = "Start Running",
+    .callback = home_menu_select_callback
+  };
+  home_menu_items[num_a_items++] = (SimpleMenuItem)
+		{
+    .title = "Active Challenges",
+    .callback = home_menu_select_callback
+  };
+  home_menu_items[num_a_items++] = (SimpleMenuItem)
+		{
+    .title = "New Challenges",
+    .callback = home_menu_select_callback
+  };
+	  home_menu_items[num_a_items++] = (SimpleMenuItem)
+			{
+    .title = "Past Challenges",
+    .callback = home_menu_select_callback
+  };
+		  home_menu_items[num_a_items++] = (SimpleMenuItem)
+				{
+    .title = "Settings",
+    .callback = home_menu_select_callback
+  };
+
+  
+  menu_sections[0] = (SimpleMenuSection)
+		{
+    .num_items = NUM_HOME_MENU_ITEMS,
+    .items = home_menu_items,
+  };
+	
+	 Layer *window_layer = window_get_root_layer(window);
+  GRect bounds = layer_get_frame(window_layer);
+
+  // Initialize the simple menu layer
+  home_menu_layer = simple_menu_layer_create(bounds, window, menu_sections, NUM_MENU_SECTIONS, NULL);
+
+  // Add it to the window for display
+  layer_add_child(window_layer, simple_menu_layer_get_layer(home_menu_layer));
 }
 
 void drawWindow(screen target, Window *window)
 {
 			switch(target){
     case SPLASH: splash_window(window); return;
-    case HOME: printf("zero"); return;
-    case CURRENT: printf("pos inf"); return;
+    case HOME: home_window(window); return;
+    case ACTIVE: printf("pos inf"); return;
 				case NEW: printf("pos inf"); return;
 				case OLD: printf("pos inf"); return;
 				case SETTINGS: printf("pos inf"); return;
@@ -65,32 +124,20 @@ void drawWindow(screen target, Window *window)
 
 void window_load(Window *window)
 {
-	  drawWindow(SPLASH, window);
-  //window_set_fullscreen(window, true);
-  //We will add the creation of the Window's elements here soon!
-  //text_layer = text_layer_create(GRect(0, 0, 144, 168));
-  //text_layer_set_background_color(text_layer, GColorClear);
-  //text_layer_set_text_color(text_layer, GColorBlack);
- 
-  //layer_add_child(window_get_root_layer(window), text_layer_get_layer(text_layer));
-	 //text_layer_set_text(text_layer, "Run For Your Money!");
-	 //tiny_bitmap = gbitmap_create_with_resource(RESOURCE_ID_TINY);
- //	window_set_status_bar_icon	(window, tiny_bitmap);
- 	//splash_bitmap = gbitmap_create_with_resource(RESOURCE_ID_SPLASH);
-	 //splash_layer = bitmap_layer_create(GRect(0, 0, 144, 168));
-  //bitmap_layer_set_bitmap(splash_layer, splash_bitmap);
-  //layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(splash_layer));
+	  //drawWindow(SPLASH, window);
+   drawWindow(HOME, window);
+  
 }
  
 void window_unload(Window *window)
 {
-  //We will safely destroy the Window's elements here!
- 	//text_layer_destroy(text_layer);
 	 //Destroy GBitmaps
+  gbitmap_destroy(tiny_bitmap);
   gbitmap_destroy(splash_bitmap);
- 
+
   //Destroy BitmapLayers
   bitmap_layer_destroy(splash_layer);
+	 simple_menu_layer_destroy(home_menu_layer);
 }
  
 void init()
