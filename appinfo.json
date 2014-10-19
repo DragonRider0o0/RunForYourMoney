@@ -9,6 +9,41 @@
     "resources": {
         "media": [
             {
+                "file": "images/flag_7.png",
+                "name": "FLAG_7",
+                "type": "png"
+            },
+            {
+                "file": "images/flag_6.png",
+                "name": "FLAG_6",
+                "type": "png"
+            },
+            {
+                "file": "images/flag_5.png",
+                "name": "FLAG_5",
+                "type": "png"
+            },
+            {
+                "file": "images/flag_4.png",
+                "name": "FLAG_4",
+                "type": "png"
+            },
+            {
+                "file": "images/flag_3.png",
+                "name": "FLAG_3",
+                "type": "png"
+            },
+            {
+                "file": "images/flag_2.png",
+                "name": "FLAG_2",
+                "type": "png"
+            },
+            {
+                "file": "images/flag_1.png",
+                "name": "FLAG_1",
+                "type": "png"
+            },
+            {
                 "file": "images/star.png",
                 "name": "STAR_BADGE",
                 "type": "png"
@@ -24,36 +59,6 @@
                 "type": "png"
             },
             {
-                "file": "images/6.png",
-                "name": "RUN_6",
-                "type": "png-trans"
-            },
-            {
-                "file": "images/5.png",
-                "name": "RUN_5",
-                "type": "png-trans"
-            },
-            {
-                "file": "images/4.png",
-                "name": "RUN_4",
-                "type": "png-trans"
-            },
-            {
-                "file": "images/3.png",
-                "name": "RUN_3",
-                "type": "png-trans"
-            },
-            {
-                "file": "images/2.png",
-                "name": "RUN_2",
-                "type": "png-trans"
-            },
-            {
-                "file": "images/1.png",
-                "name": "RUN_1",
-                "type": "png-trans"
-            },
-            {
                 "file": "images/28_icon.png",
                 "menuIcon": true,
                 "name": "Tile",
@@ -61,7 +66,7 @@
             }
         ]
     },
-    "shortName": "Run4Your $",
+    "shortName": "R4YM",
     "uuid": "0ee8ca8a-7c4d-4d65-a8ed-5ca86aee332f",
     "versionCode": 1,
     "versionLabel": "1.0",

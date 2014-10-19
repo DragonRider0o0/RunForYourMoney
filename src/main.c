@@ -14,9 +14,20 @@ typedef enum {
 	   START = 6,
 	   RACE = 7,
 	   STATS = 8,
-	   REVIEW = 9
+	   REVIEW = 9,
+	   PEBBLE = 10
 } screen;
+
+static screen origin_screen;
+static screen target_screen;
+	
 static SimpleMenuSection menu_sections[NUM_MENU_SECTIONS];
+
+void click_config_provider(void *context);
+void select_config_provider(void *context);
+void back_config_provider(void *context);
+void drawScreen(screen target_screen);
+void tick_handler(struct tm *tick_time, TimeUnits units_changed);
 	
 	//Splash Elements
 	static GBitmap *splash_bitmap;
@@ -26,6 +37,7 @@ static SimpleMenuSection menu_sections[NUM_MENU_SECTIONS];
 #define NUM_HOME_MENU_ITEMS  4
 static SimpleMenuLayer* home_menu_layer;
 static SimpleMenuItem home_menu_items[NUM_HOME_MENU_ITEMS];
+
 
 
 // Active Elements
@@ -52,6 +64,26 @@ static SimpleMenuLayer* settings_menu_layer;
 static SimpleMenuItem settings_menu_items[NUM_SETTINGS_MENU_ITEMS];
 
 
+// Start Elements
+	static GBitmap *flag_1_bitmap;
+	static BitmapLayer *flag_1_layer;
+	static GBitmap *flag_2_bitmap;
+	static BitmapLayer *flag_2_layer;
+	static GBitmap *flag_3_bitmap;
+	static BitmapLayer *flag_3_layer;
+	static GBitmap *flag_4_bitmap;
+	static BitmapLayer *flag_4_layer;
+	static GBitmap *flag_4_bitmap;
+	static BitmapLayer *flag_4_layer;
+	static GBitmap *flag_5_bitmap;
+	static BitmapLayer *flag_5_layer;
+	static GBitmap *flag_6_bitmap;
+	static BitmapLayer *flag_6_layer;
+	static GBitmap *flag_7_bitmap;
+	static BitmapLayer *flag_7_layer;
+static int ticks;
+
+
 // Stats Elements
 #define NUM_STATS_MENU_ITEMS  5
 static SimpleMenuLayer* stats_menu_layer;
@@ -69,15 +101,10 @@ static GBitmap *star_image;
 ////////////////////////////////////////////////////////////////////////////
 
 
-//void splash_select_callback(int index, void *ctx) 
-//{
-//  drawWindow(HOME, window);
-//  layer_mark_dirty(simple_menu_layer_get_layer(home_menu_layer));
-//}
-
-void splash_window(Window *window)
+void splash_window()
 	{
-	
+	 origin_screen = PEBBLE;
+	 target_screen =  HOME;
 	 tiny_bitmap = gbitmap_create_with_resource(RESOURCE_ID_TINY);
  	window_set_status_bar_icon	(window, tiny_bitmap);
 	
@@ -88,6 +115,7 @@ void splash_window(Window *window)
   bitmap_layer_set_bitmap(splash_layer, splash_bitmap);
 	 //splash_layer.callback = splash_callback;
   layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(splash_layer));
+	
 }
 
 
@@ -98,12 +126,20 @@ void splash_window(Window *window)
 
 void home_menu_select_callback(int index, void *ctx) 
 {
-  home_menu_items[index].subtitle = "You've hit select here!";
-  layer_mark_dirty(simple_menu_layer_get_layer(home_menu_layer));
+ 	switch(index)
+		{
+				case 0: target_screen = ACTIVE; origin_screen = HOME; break;
+			 case 1: target_screen = NEW; origin_screen = HOME; break;
+			 case 2: target_screen = PAST; origin_screen = HOME; break;
+			 case 3: target_screen = SETTINGS; origin_screen = HOME; break;
+			 default: break;
+		};
+  drawScreen(target_screen);
 }
 
-void home_window(Window *window)
+void home_window()
 {
+	 origin_screen = SPLASH;
 	 tiny_bitmap = gbitmap_create_with_resource(RESOURCE_ID_TINY);
  	window_set_status_bar_icon	(window, tiny_bitmap);
 	
@@ -155,11 +191,18 @@ void home_window(Window *window)
 
 void active_menu_select_callback(int index, void *ctx) 
 {
-  active_menu_items[index].subtitle = "You've hit select here!";
-  layer_mark_dirty(simple_menu_layer_get_layer(active_menu_layer));
+   	switch(index)
+		{
+				case 0: target_screen = REVIEW; 	origin_screen = ACTIVE; break;
+			 case 1: target_screen = REVIEW; 	origin_screen = ACTIVE; break;
+			 case 2: target_screen = REVIEW; 	origin_screen = ACTIVE; break;
+			 case 3: target_screen = REVIEW; 	origin_screen = ACTIVE; break;
+			 default: break;
+		};
+  drawScreen(target_screen);
 }
 
-void active_window(Window *window)
+void active_window()
 {
 	 tiny_bitmap = gbitmap_create_with_resource(RESOURCE_ID_TINY);
  	window_set_status_bar_icon	(window, tiny_bitmap);
@@ -211,11 +254,16 @@ void active_window(Window *window)
 
 void new_menu_select_callback(int index, void *ctx) 
 {
-  new_menu_items[index].subtitle = "You've hit select here!";
-  layer_mark_dirty(simple_menu_layer_get_layer(new_menu_layer));
+  switch(index)
+		{
+				case 0: target_screen = STATS;	origin_screen = NEW; break;
+			 case 1: target_screen = STATS; origin_screen = NEW; break;
+			 default: break;
+		};
+  drawScreen(target_screen);
 }
 
-void new_window(Window *window)
+void new_window()
 {
 	 tiny_bitmap = gbitmap_create_with_resource(RESOURCE_ID_TINY);
  	window_set_status_bar_icon	(window, tiny_bitmap);
@@ -257,11 +305,18 @@ void new_window(Window *window)
 
 void past_menu_select_callback(int index, void *ctx) 
 {
-  past_menu_items[index].subtitle = "You've hit select here!";
-  layer_mark_dirty(simple_menu_layer_get_layer(past_menu_layer));
+  switch(index)
+		{
+				case 0: target_screen = REVIEW; origin_screen = PAST; break;
+			 case 1: target_screen = REVIEW; origin_screen = PAST; break;
+			 case 2: target_screen = REVIEW; origin_screen = PAST; break;
+			 case 3: target_screen = REVIEW; origin_screen = PAST; break;
+			 default: break;
+		};
+  drawScreen(target_screen);
 }
 
-void past_window(Window *window)
+void past_window()
 {
 	 tiny_bitmap = gbitmap_create_with_resource(RESOURCE_ID_TINY);
  	window_set_status_bar_icon	(window, tiny_bitmap);
@@ -313,11 +368,17 @@ void past_window(Window *window)
 
 void settings_menu_select_callback(int index, void *ctx) 
 {
-  settings_menu_items[index].subtitle = "You've hit select here!";
-  layer_mark_dirty(simple_menu_layer_get_layer(settings_menu_layer));
+  switch(index)
+		{
+				case 0: target_screen = SETTINGS; vibes_long_pulse(); break;
+			 case 1: target_screen = SETTINGS; break;
+			 case 2: target_screen = SETTINGS; break;
+			 default: break;
+		};
+  drawScreen(target_screen);
 }
 
-void settings_window(Window *window)
+void settings_window()
 {
 	 tiny_bitmap = gbitmap_create_with_resource(RESOURCE_ID_TINY);
  	window_set_status_bar_icon	(window, tiny_bitmap);
@@ -361,14 +422,64 @@ void settings_window(Window *window)
 ////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
 
+void start_window()
+	{
+	ticks = 0;
+	 //origin_screen = PEBBLE;
+	 target_screen =  STATS;
+	 tiny_bitmap = gbitmap_create_with_resource(RESOURCE_ID_TINY);
+ 	window_set_status_bar_icon	(window, tiny_bitmap);
+	
+	flag_1_bitmap= gbitmap_create_with_resource(RESOURCE_ID_FLAG_1);
+	flag_2_bitmap= gbitmap_create_with_resource(RESOURCE_ID_FLAG_2);
+	flag_3_bitmap= gbitmap_create_with_resource(RESOURCE_ID_FLAG_3);
+	flag_4_bitmap= gbitmap_create_with_resource(RESOURCE_ID_FLAG_4);
+	flag_5_bitmap= gbitmap_create_with_resource(RESOURCE_ID_FLAG_5);
+	flag_6_bitmap= gbitmap_create_with_resource(RESOURCE_ID_FLAG_6);
+	flag_7_bitmap= gbitmap_create_with_resource(RESOURCE_ID_FLAG_7);
+
+	 
+	flag_1_layer = bitmap_layer_create(GRect(0, 0, 144, 168));
+	flag_2_layer = bitmap_layer_create(GRect(0, 0, 144, 168));
+	flag_3_layer = bitmap_layer_create(GRect(0, 0, 144, 168));
+	flag_4_layer = bitmap_layer_create(GRect(0, 0, 144, 168));
+	flag_5_layer = bitmap_layer_create(GRect(0, 0, 144, 168));
+	flag_6_layer = bitmap_layer_create(GRect(0, 0, 144, 168));
+	flag_7_layer = bitmap_layer_create(GRect(0, 0, 144, 168));
+	
+  bitmap_layer_set_bitmap(flag_1_layer, flag_1_bitmap);
+	bitmap_layer_set_bitmap(flag_2_layer, flag_2_bitmap);
+	bitmap_layer_set_bitmap(flag_3_layer, flag_3_bitmap);
+	bitmap_layer_set_bitmap(flag_4_layer, flag_4_bitmap);
+	bitmap_layer_set_bitmap(flag_5_layer, flag_5_bitmap);
+	bitmap_layer_set_bitmap(flag_6_layer, flag_6_bitmap);
+	bitmap_layer_set_bitmap(flag_7_layer, flag_7_bitmap);
+	 //splash_layer.callback = splash_callback;
+  tick_timer_service_subscribe(SECOND_UNIT, (TickHandler) tick_handler);
+	
+}
+
+
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+
 
 void stats_menu_select_callback(int index, void *ctx) 
 {
-  stats_menu_items[index].title = "End Run";
-  layer_mark_dirty(simple_menu_layer_get_layer(stats_menu_layer));
+	  switch(index)
+		{
+				case 0: target_screen = STATS; break;
+			 case 1: target_screen = STATS; break;
+			 case 2: target_screen = STATS; break;
+				case 3: target_screen = STATS; break;
+				case 4: target_screen = STATS; stats_menu_items[index].title = "End Run"; layer_mark_dirty(simple_menu_layer_get_layer(stats_menu_layer)); return;
+			 default: break;
+		};
+  drawScreen(target_screen);
 }
 
-void stats_window(Window *window)
+void stats_window()
 {
 	 tiny_bitmap = gbitmap_create_with_resource(RESOURCE_ID_TINY);
  	window_set_status_bar_icon	(window, tiny_bitmap);
@@ -426,11 +537,19 @@ void stats_window(Window *window)
 
 void review_menu_select_callback(int index, void *ctx) 
 {
-  review_menu_items[index].subtitle = "You've hit select here!";
-  layer_mark_dirty(simple_menu_layer_get_layer(review_menu_layer));
+  switch(index)
+		{
+				case 0: target_screen = REVIEW; break;
+			 case 1: target_screen = REVIEW; break;
+			 case 2: target_screen = REVIEW; break;
+		 	case 3: target_screen = REVIEW; break;
+			 case 4: target_screen = REVIEW; break;
+			 default: break;
+		};
+  drawScreen(target_screen);
 }
 
-void review_window(Window *window)
+void review_window()
 {
 	 tiny_bitmap = gbitmap_create_with_resource(RESOURCE_ID_TINY);
  	window_set_status_bar_icon	(window, tiny_bitmap);
@@ -483,37 +602,15 @@ void review_window(Window *window)
 }
 
 
+
 ////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
 
 
-void drawWindow(screen target, Window *window)
+void window_load()
 {
-			switch(target)
-			{
-    case SPLASH: splash_window(window); return;
-    case HOME: home_window(window); return;
-    case ACTIVE:active_window(window); return;
-				case NEW: new_window(window); return;
-				case PAST: past_window(window); return;
-				case SETTINGS: settings_window(window); return;
-				case START: printf("pos inf"); return;
-				case RACE: printf("pos inf"); return;
-				case STATS: stats_window(window); return;
-				case REVIEW: review_window(window); return;
-    default: printf("not special"); break;
-   }	
-}
-
-
-////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
-
-
-void window_load(Window *window)
-{
+	  //drawWindow(SPLASH, window);
 	  //drawWindow(SPLASH, window);
    //drawWindow(HOME, window);
 	  //drawWindow(ACTIVE, window);
@@ -521,7 +618,7 @@ void window_load(Window *window)
 	  //drawWindow(PAST, window);
 	  //drawWindow(SETTINGS, window);
 	  //drawWindow(STATS, window);
-	  drawWindow(REVIEW, window);
+	  //drawWindow(REVIEW, window);
 }
  
 void window_unload(Window *window)
@@ -532,6 +629,14 @@ void window_unload(Window *window)
 
   //Destroy BitmapLayers
   bitmap_layer_destroy(splash_layer);
+	bitmap_layer_destroy(flag_1_layer);
+	bitmap_layer_destroy(flag_2_layer);
+	bitmap_layer_destroy(flag_3_layer);
+	bitmap_layer_destroy(flag_4_layer);
+	bitmap_layer_destroy(flag_5_layer);
+	bitmap_layer_destroy(flag_6_layer);
+	bitmap_layer_destroy(flag_7_layer);
+	
 	 simple_menu_layer_destroy(home_menu_layer);
 	 simple_menu_layer_destroy(active_menu_layer);
 	simple_menu_layer_destroy(new_menu_layer);
@@ -540,6 +645,129 @@ void window_unload(Window *window)
 	simple_menu_layer_destroy(stats_menu_layer);
 	simple_menu_layer_destroy(review_menu_layer);
 }
+
+void reset_window()
+	{
+		 //Destroy GBitmaps
+  gbitmap_destroy(tiny_bitmap);
+	tiny_bitmap = NULL;
+  gbitmap_destroy(splash_bitmap);
+	splash_bitmap = NULL;
+
+  //Destroy BitmapLayers
+  bitmap_layer_destroy(splash_layer);
+	splash_layer = NULL;
+		bitmap_layer_destroy(flag_1_layer);
+	flag_1_layer = NULL;
+	bitmap_layer_destroy(flag_2_layer);
+	flag_2_layer = NULL;
+	bitmap_layer_destroy(flag_3_layer);
+	flag_3_layer = NULL;
+	bitmap_layer_destroy(flag_4_layer);
+	flag_4_layer = NULL;
+	bitmap_layer_destroy(flag_5_layer);
+	flag_5_layer = NULL;
+	bitmap_layer_destroy(flag_6_layer);
+	flag_6_layer = NULL;
+	bitmap_layer_destroy(flag_7_layer);
+	flag_7_layer = NULL;
+	
+	 simple_menu_layer_destroy(home_menu_layer);
+	home_menu_layer = NULL;
+	 simple_menu_layer_destroy(active_menu_layer);
+	active_menu_layer = NULL;
+  simple_menu_layer_destroy(new_menu_layer);
+	new_menu_layer = NULL;
+	 simple_menu_layer_destroy(past_menu_layer);
+	past_menu_layer = NULL;
+	 simple_menu_layer_destroy(settings_menu_layer);
+	settings_menu_layer = NULL;
+	 simple_menu_layer_destroy(stats_menu_layer);
+	stats_menu_layer = NULL;
+	 simple_menu_layer_destroy(review_menu_layer);
+	review_menu_layer = NULL;
+}
+
+
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+
+
+void drawScreen(screen target)
+{
+	  reset_window();
+			switch(target)
+			{
+    case SPLASH: splash_window(); break;
+    case HOME: home_window(); break;
+    case ACTIVE:active_window(); break;
+				case NEW: new_window(); break;
+				case PAST: past_window(); break;
+				case SETTINGS: settings_window(); break;
+				case START: start_window(); break;
+				case RACE: printf("pos inf"); break;
+				case STATS: stats_window(); break;
+				case REVIEW: review_window(); break;
+				case PEBBLE:  window_stack_pop(true);
+    default: printf("not special"); break;
+   }
+}
+
+
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+
+ 
+void select_click_handler(ClickRecognizerRef recognizer, void *context)
+{
+	drawScreen(target_screen);
+}
+
+void back_click_handler(ClickRecognizerRef recognizer, void *context)
+{
+	//vibes_long_pulse();
+	drawScreen(origin_screen);
+}
+
+
+void click_config_provider(void *context)
+{
+		 	window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
+	   window_single_click_subscribe(BUTTON_ID_BACK, back_click_handler);
+}
+
+void select_config_provider(void *context)
+{
+		 	window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
+}
+
+void back_config_provider(void *context)
+{
+	   window_single_click_subscribe(BUTTON_ID_BACK, back_click_handler);
+}
+
+
+void tick_handler(struct tm *tick_time, TimeUnits units_changed)
+{
+				switch(ticks)
+					{
+						case 0:  layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(flag_1_layer)); vibes_short_pulse();	break;
+					 case 1:  layer_remove_child_layers(window_get_root_layer(window)); layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(flag_2_layer));	break;
+					 case 2:  layer_remove_child_layers(window_get_root_layer(window)); layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(flag_3_layer));	break;
+					 case 3:  layer_remove_child_layers(window_get_root_layer(window)); layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(flag_4_layer)); vibes_short_pulse();	break;
+					 case 4:  layer_remove_child_layers(window_get_root_layer(window)); layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(flag_5_layer));	break;
+					 case 5:  layer_remove_child_layers(window_get_root_layer(window)); layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(flag_6_layer));	break;
+					 case 6:  layer_remove_child_layers(window_get_root_layer(window)); layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(flag_7_layer)); vibes_long_pulse();	break;
+      default: break;
+				}
+	ticks = ticks + 1;
+}
+
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
  
 void init()
 {
@@ -549,7 +777,13 @@ void init()
     .load = window_load,
     .unload = window_unload,
   });
+	
+	drawScreen(START);
+	window_set_click_config_provider(window, click_config_provider);
+	
 	window_stack_push(window, true);
+	
+	//tick_timer_service_subscribe(SECOND_UNIT, (TickHandler) tick_handler);
 }
  
 void deinit()
