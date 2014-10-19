@@ -71,7 +71,7 @@ static GBitmap *star_image;
 
 //void splash_select_callback(int index, void *ctx) 
 //{
-//  home_menu_items[index].subtitle = "You've hit select here!";
+//  drawWindow(HOME, window);
 //  layer_mark_dirty(simple_menu_layer_get_layer(home_menu_layer));
 //}
 
