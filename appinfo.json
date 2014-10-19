@@ -9,6 +9,11 @@
     "resources": {
         "media": [
             {
+                "file": "images/star.png",
+                "name": "VICTORY",
+                "type": "png-trans"
+            },
+            {
                 "file": "images/16_icon.png",
                 "name": "TINY",
                 "type": "png"
