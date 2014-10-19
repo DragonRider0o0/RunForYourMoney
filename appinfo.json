@@ -9,6 +9,36 @@
     "resources": {
         "media": [
             {
+                "file": "images/6.png",
+                "name": "RUN_6",
+                "type": "png"
+            },
+            {
+                "file": "images/5.png",
+                "name": "RUN_5",
+                "type": "png"
+            },
+            {
+                "file": "images/4.png",
+                "name": "RUN_4",
+                "type": "png"
+            },
+            {
+                "file": "images/3.png",
+                "name": "RUN_3",
+                "type": "png"
+            },
+            {
+                "file": "images/2.png",
+                "name": "RUN_2",
+                "type": "png"
+            },
+            {
+                "file": "images/1.png",
+                "name": "RUN_1",
+                "type": "png"
+            },
+            {
                 "file": "images/flag_7.png",
                 "name": "FLAG_7",
                 "type": "png"
