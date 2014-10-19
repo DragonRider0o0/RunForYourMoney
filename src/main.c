@@ -435,7 +435,7 @@ void review_window(Window *window)
 	 tiny_bitmap = gbitmap_create_with_resource(RESOURCE_ID_TINY);
  	window_set_status_bar_icon	(window, tiny_bitmap);
 	
-	 star_image = gbitmap_create_with_resource(RESOURCE_ID_VICTORY);
+	 star_image = gbitmap_create_with_resource(RESOURCE_ID_STAR_BADGE);
 	int num_a_items = 0;
   review_menu_items[num_a_items++] = (SimpleMenuItem)
 		{
@@ -444,24 +444,24 @@ void review_window(Window *window)
   };
   review_menu_items[num_a_items++] = (SimpleMenuItem)
 		{
-    .title = "Paid",
+    .title = "Bounty: $60",
     .subtitle = "April 20, 2014"
   };
   review_menu_items[num_a_items++] = (SimpleMenuItem)
 		{
     .title = "1. Jeff Shaw",
-    .subtitle = "Finished in 4h 02m. Won $60",
+    .subtitle = "Time: 4h 02m",
 				.icon = star_image
   };
 	  review_menu_items[num_a_items++] = (SimpleMenuItem)
 			{
     .title = "2. Megan Holtzblat",
-    .subtitle = "Finished in 5h 08m. Won $0"
+    .subtitle = "Time: 5h 08m"
   };
 		  review_menu_items[num_a_items++] = (SimpleMenuItem)
 				{
-    .title = "3. Angelo Caballo (You)",
-    .subtitle = "Finished in 5h 45m. Won $0"
+    .title = "3. Angelo Caballo",
+    .subtitle = "Time: 5h 45m"
   };
 
   

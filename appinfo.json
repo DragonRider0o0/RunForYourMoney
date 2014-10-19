@@ -10,8 +10,8 @@
         "media": [
             {
                 "file": "images/star.png",
-                "name": "VICTORY",
-                "type": "png-trans"
+                "name": "STAR_BADGE",
+                "type": "png"
             },
             {
                 "file": "images/16_icon.png",
