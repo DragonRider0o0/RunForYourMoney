@@ -9,7 +9,7 @@ typedef enum {
     HOME = 1,
     ACTIVE = 2,
     NEW = 3,
-	   OLD = 4,
+	   PAST = 4,
 	   SETTINGS = 5,
 	   START = 6,
 	   RACE = 7,
@@ -23,7 +23,7 @@ static SimpleMenuSection menu_sections[NUM_MENU_SECTIONS];
 	static BitmapLayer *splash_layer;
 	
 // Home Elements
-#define NUM_HOME_MENU_ITEMS  5
+#define NUM_HOME_MENU_ITEMS  4
 static SimpleMenuLayer* home_menu_layer;
 static SimpleMenuItem home_menu_items[NUM_HOME_MENU_ITEMS];
 
@@ -40,10 +40,10 @@ static SimpleMenuLayer* new_menu_layer;
 static SimpleMenuItem new_menu_items[NUM_NEW_MENU_ITEMS];
 
 
-// Old Elements
-#define NUM_OLD_MENU_ITEMS  4
-static SimpleMenuLayer* old_menu_layer;
-static SimpleMenuItem old_menu_items[NUM_OLD_MENU_ITEMS];
+// Past Elements
+#define NUM_PAST_MENU_ITEMS  4
+static SimpleMenuLayer* past_menu_layer;
+static SimpleMenuItem past_menu_items[NUM_PAST_MENU_ITEMS];
 
 // Settings Elements
 #define NUM_SETTINGS_MENU_ITEMS  3
@@ -88,11 +88,6 @@ void home_window(Window *window)
  	window_set_status_bar_icon	(window, tiny_bitmap);
 	
 	int num_a_items = 0;
-  home_menu_items[num_a_items++] = (SimpleMenuItem)
-		{
-    .title = "Start Running",
-    .callback = home_menu_select_callback
-  };
   home_menu_items[num_a_items++] = (SimpleMenuItem)
 		{
     .title = "Active Challenges",
@@ -173,6 +168,7 @@ void active_window(Window *window)
   
   menu_sections[0] = (SimpleMenuSection)
 		{
+			 .title = "Active Challenges",
     .num_items = NUM_ACTIVE_MENU_ITEMS,
     .items = active_menu_items,
   };
@@ -218,6 +214,7 @@ void new_window(Window *window)
   
   menu_sections[0] = (SimpleMenuSection)
 		{
+			.title = "New Challenges",
     .num_items = NUM_NEW_MENU_ITEMS,
     .items = new_menu_items,
   };
@@ -238,53 +235,54 @@ void new_window(Window *window)
 ////////////////////////////////////////////////////////////////////////////
 
 
-void old_menu_select_callback(int index, void *ctx) 
+void past_menu_select_callback(int index, void *ctx) 
 {
-  old_menu_items[index].subtitle = "You've hit select here!";
-  layer_mark_dirty(simple_menu_layer_get_layer(old_menu_layer));
+  past_menu_items[index].subtitle = "You've hit select here!";
+  layer_mark_dirty(simple_menu_layer_get_layer(past_menu_layer));
 }
 
-void old_window(Window *window)
+void past_window(Window *window)
 {
 	 tiny_bitmap = gbitmap_create_with_resource(RESOURCE_ID_TINY);
  	window_set_status_bar_icon	(window, tiny_bitmap);
 	
 	int num_a_items = 0;
-  old_menu_items[num_a_items++] = (SimpleMenuItem)
+  past_menu_items[num_a_items++] = (SimpleMenuItem)
 		{
     .title = "Office Race",
-    .callback = old_menu_select_callback
+    .callback = past_menu_select_callback
   };
-  old_menu_items[num_a_items++] = (SimpleMenuItem)
+  past_menu_items[num_a_items++] = (SimpleMenuItem)
 		{
     .title = "New Race",
-    .callback = old_menu_select_callback
+    .callback = past_menu_select_callback
   };
-  old_menu_items[num_a_items++] = (SimpleMenuItem)
+  past_menu_items[num_a_items++] = (SimpleMenuItem)
 		{
     .title = "Family",
-    .callback = old_menu_select_callback
+    .callback = past_menu_select_callback
   };
-	  old_menu_items[num_a_items++] = (SimpleMenuItem)
+	  past_menu_items[num_a_items++] = (SimpleMenuItem)
 			{
     .title = "Friends",
-    .callback = old_menu_select_callback
+    .callback = past_menu_select_callback
   };
   
   menu_sections[0] = (SimpleMenuSection)
 		{
-    .num_items = NUM_OLD_MENU_ITEMS,
-    .items = old_menu_items,
+			.title = "Past Challenges",
+    .num_items = NUM_PAST_MENU_ITEMS,
+    .items = past_menu_items,
   };
 	
 	 Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_frame(window_layer);
 
   // Initialize the simple menu layer
-  old_menu_layer = simple_menu_layer_create(bounds, window, menu_sections, NUM_MENU_SECTIONS, NULL);
+  past_menu_layer = simple_menu_layer_create(bounds, window, menu_sections, NUM_MENU_SECTIONS, NULL);
 
   // Add it to the window for display
-  layer_add_child(window_layer, simple_menu_layer_get_layer(old_menu_layer));
+  layer_add_child(window_layer, simple_menu_layer_get_layer(past_menu_layer));
 }
 
 
@@ -323,6 +321,7 @@ void settings_window(Window *window)
   
   menu_sections[0] = (SimpleMenuSection)
 		{
+			 .title = "Settings",
     .num_items = NUM_SETTINGS_MENU_ITEMS,
     .items = settings_menu_items,
   };
@@ -351,7 +350,7 @@ void drawWindow(screen target, Window *window)
     case HOME: home_window(window); return;
     case ACTIVE:active_window(window); return;
 				case NEW: new_window(window); return;
-				case OLD: old_window(window); return;
+				case PAST: past_window(window); return;
 				case SETTINGS: settings_window(window); return;
 				case START: printf("pos inf"); return;
 				case RACE: printf("pos inf"); return;
@@ -370,10 +369,10 @@ void drawWindow(screen target, Window *window)
 void window_load(Window *window)
 {
 	  //drawWindow(SPLASH, window);
-   drawWindow(HOME, window);
-	  //drawWindow(ACTIVE, window);
+   //drawWindow(HOME, window);
+	  drawWindow(ACTIVE, window);
 	  //drawWindow(NEW, window);
-	  //drawWindow(OLD, window);
+	  //drawWindow(PAST, window);
 	  //drawWindow(SETTINGS, window);
 	  
   
@@ -389,6 +388,9 @@ void window_unload(Window *window)
   bitmap_layer_destroy(splash_layer);
 	 simple_menu_layer_destroy(home_menu_layer);
 	 simple_menu_layer_destroy(active_menu_layer);
+	simple_menu_layer_destroy(new_menu_layer);
+	simple_menu_layer_destroy(past_menu_layer);
+	simple_menu_layer_destroy(settings_menu_layer);
 }
  
 void init()
