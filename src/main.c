@@ -514,6 +514,7 @@ void start_window()
 void race_window()
 	{
 	ticks = 0;
+		origin_screen = RACE;
 	 target_screen =  STATS;
 	 tiny_bitmap = gbitmap_create_with_resource(RESOURCE_ID_TINY);
  	window_set_status_bar_icon	(window, tiny_bitmap);
@@ -885,6 +886,7 @@ void back_config_provider(void *context)
 
 void flag_handler(struct tm *tick_time, TimeUnits units_changed)
 {
+	
 				switch(ticks)
 					{
 						case 0:  layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(flag_1_layer)); vibes_short_pulse();	break;
@@ -894,7 +896,7 @@ void flag_handler(struct tm *tick_time, TimeUnits units_changed)
 					 case 4:  layer_remove_child_layers(window_get_root_layer(window)); layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(flag_5_layer));	break;
 					 case 5:  layer_remove_child_layers(window_get_root_layer(window)); layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(flag_6_layer));	break;
 					 case 6:  layer_remove_child_layers(window_get_root_layer(window)); layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(flag_7_layer)); vibes_long_pulse();	break;
-      default: layer_remove_child_layers(window_get_root_layer(window)); tick_timer_service_unsubscribe(); origin_screen = START;  drawScreen(RACE);	 break;
+      default: layer_remove_child_layers(window_get_root_layer(window)); tick_timer_service_unsubscribe(); origin_screen = START; target_screen = RACE;  drawScreen(target_screen);	 break;
 				}
 	ticks = ticks + 1;
 }
@@ -902,6 +904,7 @@ void flag_handler(struct tm *tick_time, TimeUnits units_changed)
 
 void run_handler(struct tm *tick_time, TimeUnits units_changed)
 {
+	   target_screen = STATS;
 				switch(ticks)
 					{
 						case 0:  layer_remove_child_layers(window_get_root_layer(window)); layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(run_1_layer));	break;
@@ -910,7 +913,7 @@ void run_handler(struct tm *tick_time, TimeUnits units_changed)
 					 case 3:  layer_remove_child_layers(window_get_root_layer(window)); layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(run_4_layer)); break;
 					 case 4:  layer_remove_child_layers(window_get_root_layer(window)); layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(run_5_layer));	break;
 					 case 5:  layer_remove_child_layers(window_get_root_layer(window)); layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(run_6_layer));	break;
-      default: ticks = 0; return;
+      default: layer_remove_child_layers(window_get_root_layer(window)); tick_timer_service_unsubscribe(); origin_screen = START;  drawScreen(target_screen);	 break;
 				}
 	ticks = ticks + 1;
 }
